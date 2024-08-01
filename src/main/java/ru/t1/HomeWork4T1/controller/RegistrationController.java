@@ -17,6 +17,13 @@ public class RegistrationController {
 
     @PostMapping("/reg")
     public ResponseEntity<String> registerUser(SignUpRequest signUpRequest) {
+        if (!signUpRequest.getPassword().equals(signUpRequest.getConfirmPassword())) {
+            return new ResponseEntity<>(
+                    "Введенные пароли не совпадают",
+                    HttpStatus.CONFLICT
+            );
+        }
+
         if (userService.findByUserName(signUpRequest.getUsername()).isPresent()) {
             return new ResponseEntity<>(
                     String.format("Пользователь с логином %s уже существует", signUpRequest.getUsername()),
